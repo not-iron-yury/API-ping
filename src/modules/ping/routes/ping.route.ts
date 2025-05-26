@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { pingController } from '../controllers/ping.controller';
-import { NotFoundError } from '../common/errors/not-found.error';
+import { NotFoundError } from '../../../common/errors/not-found.error';
 
 export const pingRouter = Router();
 

@@ -1,6 +1,6 @@
 import express from 'express';
-import { pingRouter } from './routes/ping.route';
-import { echoRouter } from './routes/echo.route';
+import { pingRouter } from './modules/ping/routes/ping.route';
+import { echoRouter } from './modules/echo/routes/echo.route';
 import { errorMiddleware } from './common/middlewares/error.middleware';
 import type { ErrorRequestHandler } from 'express';
 
