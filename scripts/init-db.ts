@@ -1,18 +1,14 @@
-import { readFileSync } from 'fs';
-import path from 'path';
-import { db } from '../src/db';
+import { readFile } from 'fs/promises';
+import { sql } from '../src/db';
 
-async function initDB() {
-  const sql = readFileSync(path.join(__dirname, '../sql/create_users_table.sql'), 'utf-8');
+const run = async () => {
+  const query = await readFile('./sql/create_users_table.sql', 'utf8');
+  await sql.unsafe(query);
+  console.log('Таблица users создана (если не существовала).');
+  process.exit(0);
+};
 
-  try {
-    await db.query(sql);
-    console.log('Users table created');
-  } catch (err) {
-    console.error('Error initializing database', err);
-  } finally {
-    await db.end();
-  }
-}
-
-initDB();
+run().catch((err) => {
+  console.error('Ошибка при инициализации базы:', err);
+  process.exit(1);
+});

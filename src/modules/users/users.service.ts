@@ -1,35 +1,32 @@
-// Эмулированные данные
+import type { User } from './users.schema';
+import * as repo from './users.repository';
 
-let userIdCounter = 1;
-
-const users = [
-  { id: 1, name: 'Alice', email: 'alice@example.com' },
-  { id: 2, name: 'Bob', email: 'bob@example.com' },
-];
-
-// -----------------------------------------------//
-// логика (пока что) привязанная к эмулированным данным
-
-export const createUser = (name: string, email: string) => {
-  return {
-    id: userIdCounter++,
-    name,
-    email,
-  };
+export const createUser = async (user: Omit<User, 'id'>): Promise<User> => {
+  const { name, email } = user;
+  return (await repo.createUser(name, email)) as User;
 };
 
-export const getAllUsers = () => {
-  return users;
+export const getAllUsers = async (): Promise<User[]> => {
+  const rows = await repo.getAllUsers();
+  return rows.map((row) => row as User);
 };
 
-export const getUserById = (id: number) => {
-  return users.find((user) => user.id === id);
+export const getUserById = async (id: number): Promise<User | null> => {
+  return (await repo.getUserById(id)) as User;
 };
 
-export const deleteUser = (id: number) => {
-  const index = users.findIndex((u) => u.id === id);
-  if (index === -1) return false;
+export const addUser = (name: string, email: string) => {
+  return repo.createUser(name, email);
+};
 
-  users.splice(index, 1);
-  return true;
+export const findUser = (id: number) => {
+  return repo.getUserById(id);
+};
+
+export const listUsers = () => {
+  return repo.getAllUsers();
+};
+
+export const deleteUser = (id: number): Promise<boolean> => {
+  return repo.deleteUserById(id);
 };
