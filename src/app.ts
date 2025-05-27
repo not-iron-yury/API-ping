@@ -13,3 +13,8 @@ app.use('/echo', echoRouter);
 app.use('/users', usersRouter);
 
 app.use(errorMiddleware as ErrorRequestHandler);
+
+// import { db } from './DB';
+// db.connect()
+//   .then(() => console.log('Connected to PostgreSQL'))
+//   .catch((err) => console.error('Database connection error', err));
