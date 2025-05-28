@@ -23,15 +23,6 @@ export const getUserById = async (id: number): Promise<User | null> => {
   return userSchema.parse(result[0]);
 };
 
-// export const getAllUsers = async (): Promise<User[]> => {
-//   const result = await sql`
-//     SELECT id, name, email
-//     FROM users
-//   `;
-
-//   return z.array(userSchema).parse(result);
-// };
-
 export const getAllUsers = async () => {
   const result = await sql`
     SELECT id, name, email FROM users
@@ -51,4 +42,24 @@ export const deleteUserById = async (id: unknown): Promise<boolean> => {
   return result.count > 0;
 };
 
-console.log('USING DATABASE:', process.env.DATABASE_URL);
+export const updateUserById = async (id: number, data: Partial<User>) => {
+  if (Object.keys(data).length === 0) return null;
+
+  const assignments = Object.entries(data).map(([key, value]) => sql`${sql(key)} = ${value}`);
+
+  const setClause = assignments.reduce((acc: any[], part, i) => {
+    if (i > 0) acc.push(sql`, `);
+    acc.push(part);
+    return acc;
+  }, []);
+
+  const result = await sql`
+    UPDATE users
+    SET ${sql(setClause)}
+    WHERE id = ${id}
+    RETURNING id, name, email
+  `;
+
+  if (!result.length) return null;
+  return userSchema.parse(result[0]);
+};

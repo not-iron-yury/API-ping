@@ -3,6 +3,7 @@ import { createUser } from './users.service';
 import { getAllUsers } from './users.service';
 import { getUserById } from './users.service';
 import { deleteUser } from './users.service';
+import { updateUser } from './users.service';
 
 // --------------------  createUser -------------------- //
 export const createUserController = async (req: Request, res: Response) => {
@@ -49,4 +50,19 @@ export const deleteUserController = async (req: Request, res: Response) => {
   }
 
   res.status(204).send(); // Успешно, без тела
+};
+
+// --------------------  updateUser -------------------- //
+export const updateUserController = async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const data = req.body;
+
+  const updated = await updateUser(id, data);
+
+  if (!updated) {
+    res.status(404).json({ error: 'Пользователь не найден или данные не изменились' });
+    return;
+  }
+
+  res.status(200).json({ user: updated });
 };

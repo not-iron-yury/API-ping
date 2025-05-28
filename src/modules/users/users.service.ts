@@ -1,4 +1,4 @@
-import type { User } from './users.schema';
+import type { User, UserUpdate } from './users.schema';
 import * as repo from './users.repository';
 
 export const createUser = async (user: Omit<User, 'id'>): Promise<User> => {
@@ -29,4 +29,8 @@ export const listUsers = () => {
 
 export const deleteUser = (id: number): Promise<boolean> => {
   return repo.deleteUserById(id);
+};
+
+export const updateUser = async (id: number, data: UserUpdate): Promise<User | null> => {
+  return repo.updateUserById(id, data);
 };
